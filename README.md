@@ -5,4 +5,6 @@ The chatbot uses Natural Language Processing and Machine Learning techniques to 
 
 A diagram of the bot's architecture is given below. 
 
-![FSA] (./Finite State Architecture.jpg?raw=true "FSA")
+![FSA](./Finite%20State%20Architecture.jpg)
+
+The user feedback logs can be found in the "Analysis and User Feedback" folder.
