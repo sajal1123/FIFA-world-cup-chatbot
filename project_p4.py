@@ -27,8 +27,8 @@ import string
 import re
 import csv
 import nltk
-
-
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
 # Before running code that makes use of Word2Vec, you will need to download the provided w2v.pkl file
 # which contains the pre-trained word2vec representations from Blackboard
 #
@@ -433,9 +433,7 @@ def summarize_analysis(num_words, wps, num_pronouns, num_prp, num_articles, num_
 def welcome_state():
     # Display a welcome message to the user
     # *** Replace the line below with your updated welcome message from Project Part 1 ***
-    print("Welcome to the FIFA WORLD CUP 2022 chatbot!\n")
-
-    return ""
+    return "Welcome to the FIFA WORLD CUP 2022 chatbot!\n"
 
 
 # Function: get_name_state
@@ -448,7 +446,7 @@ def welcome_state():
 # changed the function so that it returns the user's name. For further use in the chatbot
 def get_name_state():
     # Request the user's name and accept a user response of arbitrary length
-    user_input = input("What is your name?\n")
+    user_input = input("What is your name?\nYou:")
 
     # Extract the user's name
     name = extract_user_info(user_input)
@@ -474,29 +472,29 @@ def sentiment_analysis_state(user_input, model, word2vec, first_time=0):
     w2v_test = string2vec(word2vec, user_input)
 
     label = None
-    label = svm.predict(w2v_test.reshape(1, -1)) # Use this if you select one of the other models (swap mlp for svm, etc.)
+    label = model.predict(w2v_test.reshape(1, -1)) # Use this if you select one of the other models (swap mlp for svm, etc.)
     print(label)
     if first_time==0:
         if label == 0:
-            print("Hmm, it seems like you're not too excited. Maybe talking about it will get you in the spirit!")
+            return "Hmm, it seems like you're not too excited. Maybe talking about it will get you in the spirit!"
         elif label == 1:
-            print("It sounds like you're all set for the greatest tournament in the world!")
+            return "It sounds like you're all set for the greatest tournament in the world!"
         else:
-            print("Hmm, that's weird.  My classifier predicted a value of: {0}".format(label))
+            return "Hmm, that's weird.  My classifier predicted a value of: {0}".format(label)
     elif first_time==1:
         if label == 0:
-            print("Doesn't sound like you're too confident about their chances!")
+            return "Doesn't sound like you're too confident about their chances!"
         elif label == 1:
-            print("Sounds promising! I hope they do well.")
+            return "Sounds promising! I hope they do well."
         else:
-            print("Hmm, that's weird.  My classifier predicted a value of: {0}".format(label))
+            return "Hmm, that's weird.  My classifier predicted a value of: {0}".format(label)
     else:
         if label == 1:
-            print("That is awesome! I can sense your excitement while talking about this.")
+            return "That is awesome! I can sense your excitement while talking about this."
         elif label == 0:
-            print("You don't seem too enthusiastic about this. Let's move on.")
+            return "You don't seem too enthusiastic about this. Let's move on."
         else:
-            print("Hmm, that's weird.  My classifier predicted a value of: {0}".format(label))
+            return "Hmm, that's weird.  My classifier predicted a value of: {0}".format(label)
 
     return ""
 
@@ -509,7 +507,7 @@ def sentiment_analysis_state(user_input, model, word2vec, first_time=0):
 # then analyzes their response to identify informative linguistic correlates to
 # psychological status.
 def stylistic_analysis_state(user_input, first_time=False):
-
+    user_input = user_input[0]
     print("Thank you for your responses! Here's a short stylistic analysis of your answers during this interaction.")
     num_words = count_words(user_input)
     wps = words_per_sentence(user_input)
@@ -546,11 +544,11 @@ def check_next_state():
     next_state = False
     # [YOUR CODE HERE]
     do_next = 0
-    next_state_input = input("Would you like to continue chatting?\n1) Yes!\n2) No thanks\n")
+    next_state_input = input("Would you like to continue chatting?\n1) Yes!\n2) No thanks\nYou: ")
     if len(re.findall(".*([yY]es)|(YES)|(1).*", next_state_input)) > 0:
         next_state = True
     if next_state:
-        kind = input("What kind of analysis would you like?\n1) Sentiment\n2) Stylistic\n3) Both\n")
+        kind = input("You : What kind of analysis would you like?\n1) Sentiment\n2) Stylistic\n3) Both\nYou: ")
         while do_next ==0:
             if len(re.findall(".*([sS]entiment)|(1).*", kind)) > 0:
                 do_next = 1
@@ -559,7 +557,7 @@ def check_next_state():
             elif len(re.findall(".*([bB]oth)|(3).*", kind)) > 0:
                 do_next = 3
             else:
-                kind = input("Oops, looks like your input was not compatible. Please try again:\nWhat kind of analysis would you like?\n1) Sentiment\n2) Stylistic\n3) Both\n")
+                kind = input("Oops, looks like your input was not compatible. Please try again:\nWhat kind of analysis would you like?\n1) Sentiment\n2) Stylistic\n3) Both\nYou: ")
     return next_state, do_next
 
 
@@ -639,9 +637,9 @@ def comment_on_fav(text, group):
             target_team = k
             break
     if len(target_team)>0:
-        print(group[target_team])
+        return group[target_team]
     else:
-        print("Wow, that is an interesting choice!")
+        return "Wow, that is an interesting choice!"
 
 # Function: run_chatbot
 # model: A trained classification model
@@ -661,29 +659,29 @@ def comment_on_fav(text, group):
 # check_next_state() (IN STATE) -> sentiment_analysis_state() (OUT STATE option 1) or
 #                                  stylistic_analysis_state() (OUT STATE option 2) or
 #                                  terminate chatbot
-def run_chatbot(model, word2vec):
+def run_chatbot():
     # [YOUR CODE HERE]
     teams, players, questions = initialize_player_team_data()
     welcome_state()
     name = get_name_state()
-    excited = input("Are you excited for the upcoming FIFA World Cup?\n")
+    excited = input("Are you excited for the upcoming FIFA World Cup?\nYou: ")
     sentiment_analysis_state(excited, svm, word2vec, 0)
-    fav_team = input(f"Tell me {name}, which team are you supporting in this year's world cup?\n")
+    fav_team = input(f"Tell me {name}, which team are you supporting in this year's world cup?\nYou: ")
     comment_on_fav(fav_team, teams)
-    fav_player = input("Who is your favorite player?\n")
+    fav_player = input("Who is your favorite player?\nYou: ")
     comment_on_fav(fav_player, players)
-    confidence = input("How confident are you about your team's chances?\n")
+    confidence = input("How confident are you about your team's chances?\nYou: ")
     sentiment_analysis_state(confidence, svm, word2vec, 1)
     stylistic_analysis_state(fav_team+fav_player+confidence)
     next_state, do_next = check_next_state()
     while next_state:
         # print("do_next = ", do_next)
         if do_next == 3:
-            fav_team = input(f"Tell me {name}, are there any other teams that you like?\n")
+            fav_team = input(f"Tell me {name}, are there any other teams that you like?\nYou: ")
             comment_on_fav(fav_team, teams)
-            fav_player = input("Who is your favorite player from their team?\n")
+            fav_player = input("Who is your favorite player from their team?\nYou: ")
             comment_on_fav(fav_player, players)
-            confidence = input("How confident are you about this team's chances?\n")
+            confidence = input("How confident are you about this team's chances?\nYou: ")
             sentiment_analysis_state(confidence, svm, word2vec, 1)
             stylistic_analysis_state(fav_team+fav_player+confidence)
         elif do_next == 2:
@@ -694,6 +692,59 @@ def run_chatbot(model, word2vec):
             sentiment_analysis_state(answer, svm, word2vec, 2)
         next_state, do_next = check_next_state()
     print("Thank you for using the chatbot. Enjoy the World Cup!")
+
+    #function that takes in a message and gives response
+
+def initialize():
+    teams, players, questions = initialize_player_team_data()
+    documents, labels = load_as_list("dataset.csv")
+    word2vec = load_w2v(EMBEDDING_FILE)
+    logistic, svm, mlp = instantiate_models()
+    logistic = train_model(logistic, word2vec, documents, labels)
+    svm = train_model(svm, word2vec, documents, labels)
+    mlp = train_model(mlp, word2vec, documents, labels)
+    return {"svm": svm, 
+            "word2vec":word2vec,
+             "teams": teams,
+              "players": players,
+               "questions": questions }
+
+def reply(prompt, msg, model, answers):
+    
+
+    if prompt == None:
+        name = extract_user_info(msg)
+        return f"Hi {name}!"
+    elif prompt == "Are you excited for the upcoming FIFA World Cup?":
+        wc_sentiment = sentiment_analysis_state(msg, model["svm"], model["word2vec"], 0)
+        answers.append(wc_sentiment)
+        return wc_sentiment
+    elif prompt and "which team are you supporting in this year's world cup?" in prompt:
+        fav_team = comment_on_fav(msg, model["teams"])
+        answers.append(fav_team)
+        return fav_team
+    elif prompt == "Who is your favorite player?":
+        fav_player = comment_on_fav(msg, model["players"])
+        answers.append(fav_player)
+        return fav_player
+    elif prompt == "How confident are you about your team's chances?":
+        analysis = []
+        analysis.append(sentiment_analysis_state(msg, model["svm"], model["word2vec"], 1))
+        analysis.append(stylistic_analysis_state(answers+[msg], first_time=True))
+        return analysis
+    elif "are there any other teams that you like?" in prompt:
+        return comment_on_fav(msg, model["teams"])
+    elif prompt == "Who is your favorite player from their team?\nYou: ":
+        return comment_on_fav(msg, model["players"])
+    elif prompt == "How confident are you about this team's chances?\nYou: ":
+        sentiment_analysis_state(msg, model["svm"], model["word2vec"], 1)
+        stylistic_analysis_state(fav_team+fav_player+msg)
+    # elif prompt == "Welcome to the FIFA World Cup Chatbot! What's your name?":
+    #     pass
+    else:
+        return "Thank you for using the chatbot. Have a nice day!"
+
+
 
 # ----------------------------------------------------------------------------
 
@@ -751,4 +802,8 @@ if __name__ == "__main__":
 
     # Reference code to run the chatbot
     # Replace MLP with your best performing model
-    run_chatbot(mlp, word2vec)
+    # run_chatbot(mlp, word2vec)
+
+
+    #keep adding responses to list to return analysis
+
