@@ -9,18 +9,19 @@ params = chat.initialize()
 answers = []
 @app.post("/message")
 def message():
-    
+    print("Entered message()")
     text = request.get_json().get("message")
     print("\n\nTHE TEXT IS :", text)
     prev = request.get_json().get("prompt")
     print("\n\nTHE PROMPT IS :", prev,'\n\n')
     if text == "END":
         return
-
-    response = chat.reply("Who is your favorite player?", text, params, answers)
-    
-    message = {"answer": response}
-
+    print("about to call chat.reply()")
+    response = chat.reply("Are you excited for the upcoming FIFA World Cup?", text, params, answers)
+    prompt = "THIS IS THE ENXT PROMPT"
+    print("Called chat.reply()")
+    message = {"answer": response, "nextPrompt": prompt}
+    print("\n\n\nANSWERS  =  ", answers, "\n\n\n")
     return jsonify(message)
 
 if __name__ == "__main__":

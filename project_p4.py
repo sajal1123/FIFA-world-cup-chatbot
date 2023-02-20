@@ -711,34 +711,38 @@ def initialize():
 
 def reply(prompt, msg, model, answers):
     
-
+    answers.append(msg)
+    print(answers)
     if prompt == None:
         name = extract_user_info(msg)
         return f"Hi {name}!"
     elif prompt == "Are you excited for the upcoming FIFA World Cup?":
         wc_sentiment = sentiment_analysis_state(msg, model["svm"], model["word2vec"], 0)
-        answers.append(wc_sentiment)
         return wc_sentiment
     elif prompt and "which team are you supporting in this year's world cup?" in prompt:
         fav_team = comment_on_fav(msg, model["teams"])
-        answers.append(fav_team)
         return fav_team
     elif prompt == "Who is your favorite player?":
         fav_player = comment_on_fav(msg, model["players"])
-        answers.append(fav_player)
         return fav_player
     elif prompt == "How confident are you about your team's chances?":
-        analysis = []
-        analysis.append(sentiment_analysis_state(msg, model["svm"], model["word2vec"], 1))
-        analysis.append(stylistic_analysis_state(answers+[msg], first_time=True))
+        analysis = sentiment_analysis_state(msg, model["svm"], model["word2vec"], 1)
+        return analysis
+    
+    #test later
+    elif prompt == "Would you like a stylistic analysis of your replies so far?":
+        analysis = stylistic_analysis_state(answers, True)
         return analysis
     elif "are there any other teams that you like?" in prompt:
-        return comment_on_fav(msg, model["teams"])
-    elif prompt == "Who is your favorite player from their team?\nYou: ":
+        fav_team = comment_on_fav(msg, model["teams"])
+        print(answers)
+        return fav_team
+    elif prompt == "Who is your favorite player from their team?":
         return comment_on_fav(msg, model["players"])
-    elif prompt == "How confident are you about this team's chances?\nYou: ":
-        sentiment_analysis_state(msg, model["svm"], model["word2vec"], 1)
-        stylistic_analysis_state(fav_team+fav_player+msg)
+    elif prompt == "How confident are you about this team's chances?":
+        analysis = sentiment_analysis_state(msg, model["svm"], model["word2vec"], 1)
+        return analysis
+        # stylistic_analysis_state(fav_team+fav_player+msg)
     # elif prompt == "Welcome to the FIFA World Cup Chatbot! What's your name?":
     #     pass
     else:

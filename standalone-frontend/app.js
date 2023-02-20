@@ -55,7 +55,7 @@ class Chatbox {
 
         fetch('http://127.0.0.1:5000/message', {
             method: 'POST',
-            body: JSON.stringify({ prompt: this.messages.reverse[1], message: text1 }),
+            body: JSON.stringify({ prompt: this.messages, message: text1 }),
             mode: 'cors',
             headers: {
               'Content-Type': 'application/json'
@@ -65,6 +65,9 @@ class Chatbox {
           .then(r => {
             let msg2 = { name: "FootBot", message: r.answer };
             this.messages.push(msg2);
+            // this.updateChatText(chatbox)
+            let prompt2 = { name: "FootBot", message: r.nextPrompt };
+            this.messages.push(prompt2);
             this.updateChatText(chatbox)
             textField.value = ''
 
