@@ -34,6 +34,7 @@ class Chatbox {
             chatbox.classList.add('chatbox--active')
             let welcome = { name: "FootBot", message: "Welcome to the FIFA World Cup Chatbot! What's your name?"};
             this.messages.push(welcome)
+            this.updateChatText(chatbox)
         } else {
             chatbox.classList.remove('chatbox--active')
         }

@@ -524,12 +524,14 @@ def stylistic_analysis_state(user_input, first_time=False):
     informative_correlates = summarize_analysis(num_words, wps, num_pronouns,
                                                 num_prp, num_articles, num_past,
                                                 num_future, num_prep, num_negations)
-    print("Based on my stylistic analysis, I've identified the following psychological correlates in your response:")
+    answer = ""
+    answer += "Based on my stylistic analysis, I've identified the following psychological correlates in your response:"
     for correlate in informative_correlates:
-        print("- {0}".format(correlate))
+        answer += "\n"
+        answer += "- {0}".format(correlate)
 
 
-    return ""
+    return answer
 
 
 # Function: check_next_state()
@@ -712,14 +714,14 @@ def initialize():
 def reply(prompt, msg, model, answers):
     
     answers.append(msg)
-    print(answers)
-    if prompt == None:
+    print("Answer stored in list:", answers)
+    if prompt[:7] == "Welcome":
         name = extract_user_info(msg)
         return f"Hi {name}!"
     elif prompt == "Are you excited for the upcoming FIFA World Cup?":
         wc_sentiment = sentiment_analysis_state(msg, model["svm"], model["word2vec"], 0)
         return wc_sentiment
-    elif prompt and "which team are you supporting in this year's world cup?" in prompt:
+    elif prompt and "Which team are you supporting in this year's world cup?" in prompt:
         fav_team = comment_on_fav(msg, model["teams"])
         return fav_team
     elif prompt == "Who is your favorite player?":
@@ -733,7 +735,7 @@ def reply(prompt, msg, model, answers):
     elif prompt == "Would you like a stylistic analysis of your replies so far?":
         analysis = stylistic_analysis_state(answers, True)
         return analysis
-    elif "are there any other teams that you like?" in prompt:
+    elif "Are there any other teams that you like?" in prompt:
         fav_team = comment_on_fav(msg, model["teams"])
         print(answers)
         return fav_team
