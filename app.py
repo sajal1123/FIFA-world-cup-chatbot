@@ -30,7 +30,14 @@ def message():
         print("about to call chat.reply()")
         
         curr_prompt = prev[-2]['message']
-        nxt_prompt = state_flow[curr_prompt]
+        if curr_prompt in ["Would you like a stylistic analysis of your replies so far?",
+                           "Would you like to continue?"]:
+            if "no" in user_response.lower():
+                nxt_prompt = state_flow[curr_prompt][1]
+            else:
+                nxt_prompt = state_flow[curr_prompt][0]
+        else:
+            nxt_prompt = state_flow[curr_prompt]
         
         response = chat.reply(curr_prompt, user_response, params, answers)
         message = {"answer": response, "nextPrompt": nxt_prompt}

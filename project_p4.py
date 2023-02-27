@@ -715,6 +715,8 @@ def reply(prompt, msg, model, answers):
     
     answers.append(msg)
     print("Answer stored in list:", answers)
+    if " no " in prompt.lower():
+        return ""
     if prompt[:7] == "Welcome":
         name = extract_user_info(msg)
         return f"Hi {name}!"
@@ -747,6 +749,8 @@ def reply(prompt, msg, model, answers):
         # stylistic_analysis_state(fav_team+fav_player+msg)
     # elif prompt == "Welcome to the FIFA World Cup Chatbot! What's your name?":
     #     pass
+    elif prompt == "Would you like to continue?":
+        return "You are fun to talk to!"
     else:
         return "Thank you for using the chatbot. Have a nice day!"
 

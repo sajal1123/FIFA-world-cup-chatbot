@@ -16,9 +16,10 @@ state_flow = {
     "Which team are you supporting in this year's world cup?" : "Who is your favorite player?",
     "Who is your favorite player?" : "How confident are you about your team's chances?",
     "How confident are you about your team's chances?" : "Would you like a stylistic analysis of your replies so far?",
-    "Would you like a stylistic analysis of your replies so far?" : "Would you like to continue?",
+    "Would you like a stylistic analysis of your replies so far?" : ["Would you like to continue?", "Thanks for using, bye!"],
+    "Thanks for using, bye!" : "Please refresh the page to chat again.",
     "Are there any other teams that you like?" : "Who is your favorite player from their team?",
     "Who is your favorite player from their team?" : "How confident are you about this team's chances?",
     "How confident are you about this team's chances?" : "Would you like a stylistic analysis of your replies so far?",
-    "Would you like to continue?" : "Are there any other teams that you like?"
+    "Would you like to continue?" : ["Are there any other teams that you like?", "Thanks for using, bye!"]
 }
